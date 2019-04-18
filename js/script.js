@@ -18,8 +18,8 @@ $("#design").on("change", function(){
     if($(this).val() === "js puns"){
         $('#color option').removeAttr("selected");
         $("#color option").show();
-       $("#color option").filter('[value="tomato"], [value="steelblue"], [value="dimgrey"]').hide();
-       $('#color option[value="cornflowerblue"]').attr('selected', 'selected');
+        $("#color option").filter('[value="tomato"], [value="steelblue"], [value="dimgrey"]').hide();
+        $('#color option[value="cornflowerblue"]').attr('selected', 'selected');
     }else if( $(this).val() === "heart js"){
         $('#color option').removeAttr("selected");
         $("#color option").show();
@@ -108,3 +108,64 @@ $("#payment").on("change", function() {
         showDefaultPayment();
     }
 });
+
+function nameIsValid(){
+    const regEx = /\S+/;
+    return regEx.test($("#name").val());
+}
+
+function emailIsValid(){
+    const regEx = /^\w+@\w+\.\w+$/
+    return regEx.test($("#mail").val());
+}
+
+function isChecked(){
+         return $("input:checked").length > 0;
+}
+
+function creditCardisValid(){
+    const creditNumberRegEx = /^\w{13,16}$/;
+    const zipRegEx = /^\d{5}$/;
+    const cvvRegEx = /^\d{3}$/;
+
+    return (creditNumberRegEx.test($('#cc-num').val()) && zipRegEx.test($('#zip').val()) && cvvRegEx.test($('#cvv').val())); 
+}
+
+function renderError($error, where){
+    $($error).insertAfter($(where));
+    $(".error").css("color", "red")
+}
+
+$('form').on("submit", function(e) {
+    if(!nameIsValid()){
+        $("#name").css("border", "3px solid red");
+        e.preventDefault();
+    }else{
+        $("#name").css("border", "");
+    }
+
+    if(!emailIsValid()){
+        $("#mail").css("border", "3px solid red");
+        e.preventDefault();
+    }else {
+        $("#mail").css("border", "");
+    }
+
+    if($("#payment").val() == "credit card" && !creditCardisValid()){
+        $("#errorCredit").hide();
+        renderError("<p id='errorCredit' class='error'>Please enter a valid Credit Card</p>", "#payment");
+        e.preventDefault();
+    }else {
+        $("#errorCredit").hide();
+    }
+    
+    if(!isChecked()){
+        $("#errorCheckBox").hide();
+        renderError("<p id='errorCheckBox' class='error'>Please chose atleast one Activity</p>", ".activities");
+        e.preventDefault();
+    }else{
+        $("#errorCheckBox").hide();
+    }
+});
+
+
